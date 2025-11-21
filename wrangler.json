@@ -1,0 +1,18 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "heros",
+    "main": "src/index.ts",
+    "compatibility_date": "2025-01-09",
+    "compatibility_flags": ["nodejs_compat"],
+    "workers_dev": true,
+    "preview_urls": true,
+    "triggers": { "crons": ["* * * * *"] },
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "heros",
+            "database_id": "14576962-dbc8-4dd1-8b72-4a1b73159401",
+            "migrations_dir": "drizzle/migrations"
+        }
+    ]
+}
