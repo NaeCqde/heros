@@ -6,7 +6,7 @@ export const eros = sqliteTable('eros', {
     thumbnail: text().notNull(),
 });
 
-export const monsnode = sqliteTable('monsnode', {
+export const monsnodes = sqliteTable('monsnodes', {
     src: text().notNull().primaryKey(),
     thumbnail: text().notNull(),
 });
@@ -17,5 +17,5 @@ export const pendings = sqliteTable('pendings', {
 });
 
 export type Eros = InferSelectModel<typeof eros>;
-export type Monsnode = InferSelectModel<typeof monsnode>;
+export type Monsnode = InferSelectModel<typeof monsnodes>;
 export type Pendings = InferSelectModel<typeof pendings>;
