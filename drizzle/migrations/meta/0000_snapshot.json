@@ -1,21 +1,21 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "1abb3dce-6a81-4e09-b8e2-f5aabc7cbf26",
+  "id": "ec012708-0aac-4988-b4fc-c7a2f5ab62b5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "eros": {
       "name": "eros",
       "columns": {
-        "src": {
-          "name": "src",
+        "thumbnail": {
+          "name": "thumbnail",
           "type": "text",
           "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
-        "thumbnail": {
-          "name": "thumbnail",
+        "src": {
+          "name": "src",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -28,8 +28,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "monsnode": {
-      "name": "monsnode",
+    "monsnodes": {
+      "name": "monsnodes",
       "columns": {
         "src": {
           "name": "src",

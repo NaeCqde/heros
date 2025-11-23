@@ -1,0 +1,14 @@
+{
+    "folders": [
+        {
+            "path": "../okazuri_bot"
+        },
+        {
+            "path": "."
+        },
+        {
+            "path": "../heros-uploader"
+        }
+    ],
+    "settings": {}
+}

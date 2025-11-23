@@ -18,8 +18,7 @@ export function parseMonsode(html: string): Video[] {
                 thumbnail: $(el).children('img').attr('src'),
                 src: $(el).attr('href'),
             })
-        )
-        .filter((v) => v.thumbnail && v.src);
+        );
 
     return videos;
 }

@@ -6,11 +6,6 @@ export function makeHeaders(cookies: Record<string, string>): Record<string, str
         Cookie: Object.entries(cookies)
             .map(([k, v]) => `${k}=${v}`)
             .join(';'),
-        Dnt: '1',
-        Downlink: '10',
-        Preferanonymous: '1',
-        Priority: 'u=0, i',
-        Rtt: '50',
         'Sec-Ch-Prefers-Color-Scheme': 'dark',
         'Sec-Ch-Ua': '"Chromium";v="134", "Not:A-Brand";v="24", "Microsoft Edge";v="134"',
         'Sec-Ch-Ua-Arch': '"arm"',

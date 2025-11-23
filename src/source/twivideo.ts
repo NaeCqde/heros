@@ -24,8 +24,7 @@ export function parseTwiVideo(html: string): Video[] {
         .map((el) => ({
             thumbnail: $(el).children('img').attr('src'),
             src: $(el).attr('href'),
-        }))
-        .filter((v) => v.thumbnail && v.src);
+        }));
 
     for (const [i, v] of Object.entries(videos)) {
         if (!(v.src.indexOf('?') === -1)) videos[Number(i)].src = v.src.split('?')[0];

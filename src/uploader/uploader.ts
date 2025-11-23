@@ -1,3 +1,4 @@
+// ファイルサイズが一定以上になるとメモリサイズ上限突破のエラーが出るためWIP
 import type { Video } from '../types.js';
 import { catbox } from './catbox.js';
 import { gofile } from './gofile.js';

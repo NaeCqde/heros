@@ -2,8 +2,8 @@ import type { InferSelectModel } from 'drizzle-orm';
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const eros = sqliteTable('eros', {
-    src: text().notNull().primaryKey(),
-    thumbnail: text().notNull(),
+    thumbnail: text().notNull().primaryKey(),
+    src: text().notNull(),
 });
 
 export const monsnodes = sqliteTable('monsnodes', {

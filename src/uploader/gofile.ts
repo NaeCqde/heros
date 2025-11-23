@@ -23,7 +23,6 @@ export async function gofile(url: string): Promise<string> {
         headers: makeHeaders({}),
     }).then((res) => res.json());
     const token = acc['data']['token'];
-    console.log(acc);
 
     const folder: any = await fetch('https://api.gofile.io/contents/createfolder', {
         method: 'POST',
@@ -34,7 +33,6 @@ export async function gofile(url: string): Promise<string> {
         },
         body: JSON.stringify({ parentFolderId: acc['data']['rootFolder'], public: true }),
     }).then((res) => res.json());
-    console.log(folder);
 
     const form = new FormData();
     form.append('token', token);
