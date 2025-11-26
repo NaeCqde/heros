@@ -1,6 +1,7 @@
 CREATE TABLE `eros` (
 	`thumbnail` text PRIMARY KEY NOT NULL,
-	`src` text NOT NULL
+	`src` text NOT NULL,
+	`timestamp` integer
 );
 --> statement-breakpoint
 CREATE TABLE `monsnodes` (

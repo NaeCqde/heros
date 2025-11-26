@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "ec012708-0aac-4988-b4fc-c7a2f5ab62b5",
+  "id": "11cff3ad-8006-4884-85f1-cd77f27819fe",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "eros": {
@@ -19,6 +19,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         }
       },

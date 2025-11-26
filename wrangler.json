@@ -3,11 +3,12 @@
     "name": "heros",
     "main": "src/index.ts",
     "compatibility_date": "2025-01-09",
-    "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+    "compatibility_flags": ["nodejs_compat"],
     "workers_dev": true,
     "preview_urls": true,
 
     "triggers": { "crons": ["* * * * *"] },
+    "vars": { "UPLOADER": "https://heros.nae.quest" },
     "d1_databases": [
         {
             "binding": "DB",

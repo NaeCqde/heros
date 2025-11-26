@@ -1,9 +1,10 @@
 import type { InferSelectModel } from 'drizzle-orm';
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const eros = sqliteTable('eros', {
     thumbnail: text().notNull().primaryKey(),
     src: text().notNull(),
+    timestamp: integer({ mode: 'timestamp' }),
 });
 
 export const monsnodes = sqliteTable('monsnodes', {
