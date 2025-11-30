@@ -1,7 +1,7 @@
 import { load } from 'cheerio';
 import { drizzle, DrizzleD1Database } from 'drizzle-orm/d1';
 
-import { inArray, isNull } from 'drizzle-orm';
+import { inArray, isNull, lt } from 'drizzle-orm';
 import { eros, monsnodes, pendings } from './schema.js';
 import { fetchMonsode } from './source/monsnode.js';
 import { fetchTwiVideo } from './source/twivideo.js';
@@ -37,6 +37,11 @@ export default {
                 }
 
                 console.log('Complete');
+
+                await db
+                    .delete(eros)
+                    .where(lt(eros.timestamp, new Date(Date.now() - 1000 * 60 * 60 * 24)))
+                    .limit(50);
                 return;
 
             case minutes % 5 === 0:
