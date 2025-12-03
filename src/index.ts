@@ -1,110 +1,94 @@
 import { load } from 'cheerio';
+import { Embed, webhook } from 'discord-hono';
+import { inArray, isNull, lt } from 'drizzle-orm';
 import { drizzle, DrizzleD1Database } from 'drizzle-orm/d1';
 
-import { inArray, isNull, lt } from 'drizzle-orm';
+import * as handlers from './cmd';
+import { factory } from './init';
 import { eros, monsnodes, pendings } from './schema.js';
 import { fetchMonsode } from './source/monsnode.js';
 import { fetchTwiVideo } from './source/twivideo.js';
-import { Video } from './types.js';
 
-export default {
-    async scheduled(
-        controller: ScheduledController,
-        env: Env,
-        ctx: ExecutionContext
-    ): Promise<void> {
-        const minutes = new Date(controller.scheduledTime).getUTCMinutes();
-        const db = drizzle(env.DB);
+const bot = factory
+    // @ts-ignore
+    .discord({ discordEnv: (env) => ({ ...env, TOKEN: env.BOT_TOKEN }) })
+    .loader(Object.values(handlers));
 
-        switch (true) {
-            case minutes % 30 === 0:
-                console.log('Fetching monsode and twivideo videos');
+bot.cron('* * * * *', async (ctx) => {
+    const minutes = new Date(ctx.interaction.scheduledTime).getUTCMinutes();
+    const db = drizzle(ctx.env.DB);
 
-                const mon = await fetchMonsode();
-                console.log('Fetched monsode videos:', mon.length);
-                //console.log(pen);
-                if (mon.length) {
-                    await db.insert(monsnodes).values(mon.slice(0, 50)).onConflictDoNothing();
-                    if (mon.length > 50)
-                        await db.insert(monsnodes).values(mon.slice(50, 100)).onConflictDoNothing();
-                }
+    switch (true) {
+        case minutes % 30 === 0:
+            console.log('Fetching monsode and twivideo videos');
 
-                const pen = await fetchTwiVideo();
-                console.log('Fetched twivideo videos:', pen.length);
-                //console.log(videos);
-                if (pen.length) {
-                    await db.insert(pendings).values(pen.slice(0, 50)).onConflictDoNothing();
-                }
-
-                console.log('Complete');
-
-                await db
-                    .delete(eros)
-                    .where(lt(eros.timestamp, new Date(Date.now() - 1000 * 60 * 60 * 24)))
-                    .limit(50);
-                return;
-
-            case minutes % 5 === 0:
-                console.log('Send to discord');
-                const videos = await db.select().from(eros).where(isNull(eros.timestamp)).limit(20);
-
-                for (const [i, v] of Object.entries(videos)) {
-                    console.log(v);
-                    //send to discord channel
-                    await sendToDiscord(env.WEBHOOK_URL, v);
-                    //2回に1度10秒スリープ
-                    if (Number(i) && Number(i) % 2 == 0) {
-                        await sleep(10);
-                    }
-                }
-
-                await db
-                    .update(eros)
-                    .set({ timestamp: new Date() })
-                    .where(
-                        inArray(
-                            eros.thumbnail,
-                            videos.map((v) => v.thumbnail)
-                        )
-                    );
-
-                console.log('used ' + videos.length);
-                console.log('Complete');
-                return;
-            case minutes % 3 === 0:
-                console.log('Running extract task');
-                await workMonsode(db);
-                console.log('Complete');
-                return;
-            default:
-                console.log('Running upload task');
-                await workUpload(env.UPLOADER, db);
-                console.log('Complete');
-                return;
-        }
-    },
-    /*
-    async fetch(request, env: Env, ctx: ExecutionContext): Promise<Response> {
-        const url = new URL(request.url);
-        if (url.pathname === '/upload') {
-            const thumbnail = infinityDecode(url.searchParams.get('thumbnail') || '');
-            if (!thumbnail) {
-                return new Response('?thumbnail=<thumbnail> is required', { status: 400 });
+            const mon = await fetchMonsode();
+            console.log('Fetched monsode videos:', mon.length);
+            //console.log(pen);
+            if (mon.length) {
+                await db.insert(monsnodes).values(mon.slice(0, 50)).onConflictDoNothing();
+                if (mon.length > 50)
+                    await db.insert(monsnodes).values(mon.slice(50, 100)).onConflictDoNothing();
             }
 
-            const src = infinityDecode(url.searchParams.get('src') || '');
-            if (!src) {
-                return new Response('?src=<src> is required', { status: 400 });
+            const pen = await fetchTwiVideo();
+            console.log('Fetched twivideo videos:', pen.length);
+            //console.log(videos);
+            if (pen.length) {
+                await db.insert(pendings).values(pen.slice(0, 50)).onConflictDoNothing();
             }
 
-            const video = await upload(thumbnail, src);
+            console.log('Complete');
 
-            return Response.json(video);
-        } else {
-            return new Response('not found', { status: 404 });
-        }
-    },*/
-} satisfies ExportedHandler<Env>;
+            await db
+                .delete(eros)
+                .where(lt(eros.timestamp, new Date(Date.now() - 1000 * 60 * 60 * 24)))
+                .limit(50);
+            return;
+
+        case minutes % 5 === 0:
+            console.log('Send to discord');
+            const videos = await db.select().from(eros).where(isNull(eros.timestamp)).limit(20);
+
+            for (const [i, v] of Object.entries(videos)) {
+                console.log(v);
+                //send to discord channel
+                // @ts-ignore
+                await webhook(ctx.env.WEBHOOK_URL, genBody(v.thumbnail, v.src)).then((text) =>
+                    console.log(text)
+                );
+                //2回に1度10秒スリープ
+                if (Number(i) && Number(i) % 2 == 0) {
+                    await sleep(10);
+                }
+            }
+
+            await db
+                .update(eros)
+                .set({ timestamp: new Date() })
+                .where(
+                    inArray(
+                        eros.thumbnail,
+                        videos.map((v) => v.thumbnail)
+                    )
+                );
+
+            console.log('used ' + videos.length);
+            console.log('Complete');
+            return;
+        case minutes % 3 === 0:
+            console.log('Running extract task');
+            await workMonsode(db);
+            console.log('Complete');
+            return;
+        default:
+            console.log('Running upload task');
+            // @ts-ignore
+            await workUpload(ctx.env.UPLOADER, db);
+            console.log('Complete');
+            return;
+    }
+});
 
 /*
 function infinityDecode(text: string) {
@@ -116,31 +100,10 @@ function infinityDecode(text: string) {
     return text;
 }
 */
-
-async function sendToDiscord(webhook: string, video: Video) {
-    const resp = await fetch(webhook, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(genBody(video.thumbnail, video.src)),
-    });
-    await resp.text().then((text) => console.log(text));
-}
-
 function genBody(thumbnail: string, src: string) {
     return {
         content: '🎬 新動画発見',
-        embeds: [
-            {
-                title: '動画を開く',
-                url: src,
-                image: {
-                    url: thumbnail,
-                },
-                color: 45300,
-            },
-        ],
+        embeds: [new Embed().title('動画を開く').url(src).image({ url: thumbnail }).color(45300)],
     };
 }
 
@@ -172,7 +135,7 @@ async function workUpload(uploader: string, db: DrizzleD1Database): Promise<void
 
     let completed = 0;
     for (const [i, v] of Object.entries(videos)) {
-        const resp = await fetch(uploader + '/upload', {
+        const resp = await fetch(uploader, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -199,3 +162,5 @@ async function sleep(seconds: number = 0): Promise<void> {
     // @ts-expect-error
     await fetch(`https://httpbin.org/delay/${seconds}`, { cacheTtl: 0 });
 }
+
+export default bot;

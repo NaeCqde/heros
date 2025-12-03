@@ -1,25 +1,29 @@
 {
-    "name": "gsearch",
+    "name": "heros",
     "version": "0.0.1",
-    "private": true,
+    "author": "NaeCqde <contact@nae.quest> (https://nae.quest/)",
     "scripts": {
         "deploy": "echo y | pnpm run migrate --remote && wrangler deploy",
         "dev": "wrangler dev",
         "start": "wrangler dev",
-        "cf-typegen": "wrangler types",
+        "typegen": "wrangler types",
         "generate": "drizzle-kit generate",
-        "migrate": "wrangler d1 migrations apply heros"
+        "migrate": "wrangler d1 migrations apply heros",
+        "register": "tsx --env-file=.dev.vars src/register.ts"
     },
     "devDependencies": {
-        "@cloudflare/workers-types": "^4.20250121.0",
-        "@types/jsdom": "^27.0.0",
-        "@types/set-cookie-parser": "^2.4.10",
-        "drizzle-kit": "^0.30.2",
+        "@cloudflare/workers-types": "^4.20251202.0",
+        "@types/node": "^24.10.1",
+        "dotenv": "^17.2.3",
+        "drizzle-kit": "^0.31.7",
+        "tsx": "^4.21.0",
         "typescript": "^5.7.3",
-        "wrangler": "^4.50.0"
+        "wrangler": "^4.51.0"
     },
     "dependencies": {
         "cheerio": "^1.1.2",
-        "drizzle-orm": "^0.38.4"
+        "discord-api-types": "^0.38.36",
+        "discord-hono": "^0.20.1",
+        "drizzle-orm": "^0.44.7"
     }
 }

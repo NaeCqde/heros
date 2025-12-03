@@ -6,9 +6,14 @@
     "compatibility_flags": ["nodejs_compat"],
     "workers_dev": true,
     "preview_urls": true,
-
-    "triggers": { "crons": ["* * * * *"] },
-    "vars": { "UPLOADER": "https://heros.nae.quest" },
+    "triggers": {
+        "crons": ["* * * * *"]
+    },
+    "vars": {
+        "UPLOADER": "https://heros.nae.quest/upload",
+        "APPLICATION_ID": "1445326892885344256",
+        "PUBLIC_KEY": "904e555294156dc3ea35931cda77e47c55f9858cdb4c817f29f1dd764d020f3f"
+    },
     "d1_databases": [
         {
             "binding": "DB",

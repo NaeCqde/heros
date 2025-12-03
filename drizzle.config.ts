@@ -1,9 +1,9 @@
+import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
 
 if (!(process.env.CF_ACCOUNT_ID && process.env.CF_DATABASE_ID && process.env.CF_TOKEN))
     throw Error(".env's variable is not defined");
 
-// @ts-ignore
 export default defineConfig({
     dialect: 'sqlite',
     driver: 'd1-http',
