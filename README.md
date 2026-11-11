@@ -1,5 +1,7 @@
 # エロ動画 スクレイパー for Cloudflare Workers
 
+日本語 | [English](README.en.md)
+
 ### [This project uses Discord Hono](https://discord-hono.luis.fun/)
 
 ## 機能
