@@ -37,7 +37,7 @@ importers:
         specifier: ^0.20.1
         version: 0.20.1
       drizzle-orm:
-        specifier: '>=0.45.2'
+        specifier: ^0.45.2
         version: 0.45.4(@cloudflare/workers-types@4.20251202.0)
     devDependencies:
       '@cloudflare/workers-types':
